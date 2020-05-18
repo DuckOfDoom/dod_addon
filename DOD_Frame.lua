@@ -1,13 +1,15 @@
 local frame
 local text
 
-function DOD.CreateFrame()
+function DOD.CreateFrame(linesCount, onButtonClick)
   local settings = DOD_settings
 
   frame = CreateFrame("Frame", nil, UIParent, "UIPanelDialogTemplate")
 
+  frameSize = linesCount * 16
+
   frame:SetPoint("TOPLEFT")
-  frame:SetSize(300, 100)
+  frame:SetSize(300, 125 + linesCount * 16)
 
   frame:SetMovable(true)
   frame:EnableMouse(true)
@@ -24,18 +26,27 @@ function DOD.CreateFrame()
 
   text = frame:CreateFontString(nil, "OVERLAY");
   text:SetFont("Fonts\\FRIZQT___CYR.TTF", 16, "OUTLINE");
-  text:SetPoint("LEFT", 25, 0);
-
+  text:SetPoint("TOPLEFT", 25, -25);
   text:SetJustifyH("LEFT");
   text:SetTextColor(.75, .75, 1)
 
+  local b = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+  b:SetSize(80 ,22) -- width, height
+  b:SetText("Clear")
+  b:SetPoint("BOTTOMLEFT", 10, 10)
+  b:SetScript("OnClick", onButtonClick)
+
   return frame;
+end
+
+function DOD.ShowFrame()
+  frame:Show()
 end
 
 function DOD.SetFramePosition(x, y)
   frame:SetPoint("TOPLEFT", x, y)
 end
 
-function DOD.SetFrameText(text)
-  text:SetText(text)
+function DOD.SetFrameText(t)
+  text:SetText(t)
 end

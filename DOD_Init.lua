@@ -5,7 +5,7 @@ DOD = { }
 local initFrame = nil
 
 SlashCmdList["DOD"] = function(msg)
-  DOD.Init()
+  DOD.ShowFrame()
 end
 
 function DOD.Init()
@@ -18,6 +18,12 @@ function DOD.Init()
   initFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
   initFrame:SetScript("OnEvent", function (_,e, ...) DOD[e](...) end)
+  initFrame:SetScript("OnUpdate", DOD.OnUpdate)
+end
+
+function DOD.OnUpdate(self, elapsedSeconds) 
+  DOD.CombatProcessorUpdate(elapsedSeconds)
+  DOD.SetFrameText(DOD.CombatProcessorGetInfo())
 end
 
 function DOD.ADDON_LOADED(...)
@@ -31,17 +37,17 @@ function DOD.ADDON_LOADED(...)
     DOD_SETTINGS = DOD_settings
   end
 
-  DOD.CursorCooldownInit()
+  DOD.CreateFrame(table.getn(DOD.spellsOfInterest), DOD.CombatProcessorClear)
+  DOD.SetFramePosition(DOD_settings.position [1], DOD_settings.position [2])
 
-  DOD.CreateFrame()
-  local p = DOD_settings.position 
-  DOD.SetFramePosition(p[1], p[2])
+  DOD.CursorCooldownInit()
+  DOD.CombatProcessorInit()
 
   initFrame:UnregisterEvent("ADDON_LOADED")
 end
 
 function DOD.PLAYER_XP_UPDATE(arg1, ...)
-  if (arg1 ~= "player") then
+ if (arg1 ~= "player") then
     return
   end
 
@@ -54,7 +60,7 @@ end
 
 -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
 function DOD.COMBAT_LOG_EVENT_UNFILTERED(...)
-  DOD.OnCombatLogEvent(...)
+  DOD.OnCombatLogEvent(CombatLogGetCurrentEventInfo())
 end
 
 function DOD.UNIT_SPELLCAST_SUCCEEDED(caster, _, spellId)
