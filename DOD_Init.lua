@@ -3,6 +3,7 @@ SLASH_DOD1 = "/dodshow"
 DOD = { }
 
 local initFrame = nil
+local mode = 0
 
 SlashCmdList["DOD"] = function(msg)
   DOD.ShowFrame()
@@ -18,12 +19,23 @@ function DOD.Init()
   initFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
   initFrame:SetScript("OnEvent", function (_,e, ...) DOD[e](...) end)
-  initFrame:SetScript("OnUpdate", DOD.OnUpdate)
+  initFrame:SetScript("OnUpdate", DOD.Update)
 end
 
-function DOD.OnUpdate(self, elapsedSeconds) 
-  DOD.CombatProcessorUpdate(elapsedSeconds)
-  DOD.SetFrameText(DOD.CombatProcessorGetInfo())
+function DOD.Update(self, elapsedSeconds) 
+  if mode == 0 then
+    DOD.CombatProcessorUpdate(elapsedSeconds)
+    DOD.SetFrameText(DOD.CombatProcessorGetInfo())
+  end
+end
+
+function DOD.SwitchMode()
+  mode = mode + 1
+  if mode > 1 then mode = 0 end
+
+  if mode == 1 then
+    DOD.SetFrameText("EXP mode! Kill Something!")
+  end
 end
 
 function DOD.ADDON_LOADED(...)
@@ -37,7 +49,7 @@ function DOD.ADDON_LOADED(...)
     DOD_SETTINGS = DOD_settings
   end
 
-  DOD.CreateFrame(table.getn(DOD.spellsOfInterest), DOD.CombatProcessorClear)
+  DOD.CreateFrame(table.getn(DOD.spellsOfInterest), DOD.CombatProcessorClear, DOD.SwitchMode)
   DOD.SetFramePosition(DOD_settings.position [1], DOD_settings.position [2])
 
   DOD.CursorCooldownInit()
@@ -47,11 +59,11 @@ function DOD.ADDON_LOADED(...)
 end
 
 function DOD.PLAYER_XP_UPDATE(arg1, ...)
- if (arg1 ~= "player") then
+  if (arg1 ~= "player") then
     return
   end
 
-  DOD.SetFrameText(ExpPercentageCounter.CalculateExpPercentage())
+  DOD.SetFrameText(DOD.CalculateExpPercentage())
 end
 
 function DOD.UNIT_AURA(unit, ...)
