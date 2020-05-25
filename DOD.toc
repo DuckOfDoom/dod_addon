@@ -1,13 +1,11 @@
 ## Interface: 80205
-## Title: Duck Of Doom
+## Title: DOD
 ## Notes: Do some stuff
 ## SavedVariables: DOD_SETTINGS
+## SavedVariablesPerCharacter: DOD_SAVED_VARS
 
 DOD_Init.lua
 DOD_CursorCooldown.lua
 DOD_CombatProcessor.lua
 DOD_ExpPercentageCounter.lua
 DOD_Frame.lua
-
-## DuckOfDoom.xml
-

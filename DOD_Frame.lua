@@ -1,9 +1,7 @@
 local frame
 local text
 
-function DOD.CreateFrame(linesCount, onButtonClick)
-  local settings = DOD_settings
-
+function DOD.CreateFrame(linesCount, clear, switchMode)
   frame = CreateFrame("Frame", nil, UIParent, "UIPanelDialogTemplate")
 
   frameSize = linesCount * 16
@@ -17,7 +15,7 @@ function DOD.CreateFrame(linesCount, onButtonClick)
 
   local function OnFrameMoveStop()
     local p, rel, rp, x, y = frame:GetPoint()
-    settings.position = {x, y} --frame:GetPoint()
+    DOD.settings.position = {x, y} --frame:GetPoint()
     frame:StopMovingOrSizing()
   end
 
@@ -34,7 +32,13 @@ function DOD.CreateFrame(linesCount, onButtonClick)
   b:SetSize(80 ,22) -- width, height
   b:SetText("Clear")
   b:SetPoint("BOTTOMLEFT", 10, 10)
-  b:SetScript("OnClick", onButtonClick)
+  b:SetScript("OnClick", clear)
+
+  b = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+  b:SetSize(80 ,22) -- width, height
+  b:SetText("Toggle Mode")
+  b:SetPoint("BOTTOMRIGHT", -20, 10)
+  b:SetScript("OnClick", switchMode)
 
   return frame;
 end
