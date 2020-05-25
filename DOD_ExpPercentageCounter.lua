@@ -6,8 +6,13 @@ function f(value)
 end
 
 local prevExp = UnitXP('player')
+local info
 
-function DOD.CalculateExpPercentage()
+function DOD.GetExpPercentageInfo()
+    return info
+end
+
+function DOD.RefreshExpPercentageInfo()
     local max = UnitXPMax('player')
     local curr = UnitXP('player')
     local perccurr = curr / max * 100
@@ -16,5 +21,5 @@ function DOD.CalculateExpPercentage()
     local t = f(diff) .. "(" .. f(percdiff) .. "%) - " .. f(perccurr) .. "% " .. f((max - curr) / diff)
     prevExp = curr
 
-    return t
+    info = t
 end
