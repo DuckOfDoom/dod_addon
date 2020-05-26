@@ -29,6 +29,7 @@ local function SwitchMode()
     mode = 0
   end
 
+  print(mode)
 end
 
 function DOD.Init()
@@ -50,7 +51,7 @@ function DOD.OnUpdate(self, elapsedSeconds)
     DOD.SetFrameText(DOD.CombatProcessorGetProcsInfo())
   elseif mode == 1 then
     DOD.SetFrameText(DOD.CombatProcessorGetVoidFormInfo())
-  elseif mode == 3 then
+  elseif mode == 2 then
     DOD.SetFrameText(DOD.GetExpPercentageInfo())
   end
 end

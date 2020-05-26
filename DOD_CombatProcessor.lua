@@ -94,6 +94,7 @@ function DOD.CombatProcessorGetProcsInfo()
     local ppm = getProcsPerMinute(k)
     str = str .. string.sub(k, 0, 30)  .. " - " ..  v .. " (" .. seconds(ppm) .. "/min)" .. "\n"
   end
+  print(str)
   return str
 end
 
