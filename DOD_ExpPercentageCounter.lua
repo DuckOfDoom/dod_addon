@@ -6,7 +6,7 @@ function f(value)
 end
 
 local prevExp = UnitXP('player')
-local info
+local info = "Kill Something!"
 
 function DOD.GetExpPercentageInfo()
     return info

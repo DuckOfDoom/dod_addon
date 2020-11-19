@@ -8,30 +8,6 @@ SlashCmdList["DOD"] = function(msg)
   DOD.ShowFrame()
 end
 
--- 0 - combat procs
--- 1 - voidform tracking
--- 2 - exp tracking
-local mode = 0
-
-local function SwitchMode()
-  mode = mode + 1 
-  if mode > 2 then
-    mode = 0
-  end
-
-  -- skip voidform mode for non shadow priest
-  if mode == 1 and not DOD.isShadowPriest then
-    mode = 2
-  end
-
-  -- skip exp mode for max level characters
-  if mode == 2 and UnitLevel("player") == 120 then
-    mode = 0
-  end
-
-  print(mode)
-end
-
 function DOD.Init()
   local initFrame = CreateFrame("Frame", nil, UIParent)
   initFrame:RegisterEvent("ADDON_LOADED")
@@ -41,19 +17,15 @@ function DOD.Init()
   initFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 
   initFrame:SetScript("OnEvent", function (_,e, ...) DOD[e](...) end)
-  initFrame:SetScript("OnUpdate", DOD.Update)
+  initFrame:SetScript("OnUpdate", DOD.OnUpdate)
 end
 
 function DOD.OnUpdate(self, elapsedSeconds) 
   DOD.CombatProcessorUpdate(elapsedSeconds)
 
-  if mode == 0 then
-    DOD.SetFrameText(DOD.CombatProcessorGetProcsInfo())
-  elseif mode == 1 then
-    DOD.SetFrameText(DOD.CombatProcessorGetVoidFormInfo())
-  elseif mode == 2 then
-    DOD.SetFrameText(DOD.GetExpPercentageInfo())
-  end
+  expInfo = DOD.GetExpPercentageInfo()
+  combatProcessorInfo = DOD.CombatProcessorGetProcsInfo()
+  DOD.SetFrameText(expInfo .. "\n" .. combatProcessorInfo)
 end
 
 function DOD.ADDON_LOADED(addonName, ...)

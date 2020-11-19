@@ -7,7 +7,7 @@ function DOD.CreateFrame(linesCount, clear, switchMode)
   frameSize = linesCount * 16
 
   frame:SetPoint("TOPLEFT")
-  frame:SetSize(300, 125 + linesCount * 16)
+  frame:SetSize(300, 125 + frameSize)
 
   frame:SetMovable(true)
   frame:EnableMouse(true)
@@ -24,7 +24,7 @@ function DOD.CreateFrame(linesCount, clear, switchMode)
 
   text = frame:CreateFontString(nil, "OVERLAY");
   text:SetFont("Fonts\\FRIZQT___CYR.TTF", 16, "OUTLINE");
-  text:SetPoint("TOPLEFT", 25, -25);
+  text:SetPoint("TOPLEFT", 25, -50);
   text:SetJustifyH("LEFT");
   text:SetTextColor(.75, .75, 1)
 
