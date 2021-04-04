@@ -1,7 +1,7 @@
 local frame
 local text
 
-function DOD.CreateFrame(linesCount, clear, switchMode)
+function DOD.CreateFrame(linesCount, clear, misc)
   frame = CreateFrame("Frame", nil, UIParent, "UIPanelDialogTemplate")
 
   frameSize = linesCount * 16
@@ -36,9 +36,15 @@ function DOD.CreateFrame(linesCount, clear, switchMode)
 
   local b = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
   b:SetSize(80 ,22) -- width, height
-  b:SetText("Toggle Mode")
+  b:SetText("Misc")
   b:SetPoint("BOTTOMRIGHT", -20, 10)
-  b:SetScript("OnClick", switchMode)
+  b:SetScript("OnClick", misc)
+
+--  local b = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+--  b:SetSize(80 ,22) -- width, height
+--  b:SetText("Misc")
+--  b:SetPoint("BOTTOMCENTER", 0, 10)
+--  b:SetScript("OnClick", switchMode)
 
   return frame;
 end

@@ -8,4 +8,5 @@ DOD_Init.lua
 DOD_CursorCooldown.lua
 DOD_CombatProcessor.lua
 DOD_ExpPercentageCounter.lua
+DOD_DetailsHelper.lua
 DOD_Frame.lua
