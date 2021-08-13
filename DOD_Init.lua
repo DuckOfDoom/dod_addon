@@ -44,7 +44,12 @@ function DOD.ADDON_LOADED(addonName, ...)
   DOD.settings = DOD_SETTINGS
   DOD.savedVars = DOD_SAVED_VARS
 
-  DOD.CreateFrame(table.getn(DOD.spellsOfInterest), DOD.CombatProcessorClear, DOD.DetailsDump)
+  DOD.CreateFrame(
+    table.getn(DOD.trackedUptime) + table.getn(DOD.trackedProcs),
+    DOD.CombatProcessorClear,
+    DOD.DetailsDump
+  )
+
   DOD.SetFramePosition(DOD.settings.position [1], DOD.settings.position [2])
 
   DOD.CursorCooldownInit()

@@ -1,11 +1,11 @@
-DOD.spellsOfInterest = {
-  "Сны наяву",
-  "Ураганные удары",
-  "Шулерские игральные кости: искусность",
-  "Шулерские игральные кости: скорость",
-  "Шулерские игральные кости: критический удар",
-  "Безудержная сила",
-  "Вспарывание"
+-- Track procs per minute
+DOD.trackedProcs = {
+--  "Enrage"
+}
+
+-- Track uptime of status in combat
+DOD.trackedUptime = {
+  "Enrage"
 }
 
 local eventsOfInterest = {
@@ -18,6 +18,7 @@ local eventsOfInterest = {
 
 local playerGUID = 0
 local procs = { }
+local uptime = { }
 local combatTime = 0
 
 local function starts_with(str, start)
@@ -42,22 +43,11 @@ local function getProcsPerMinute(s)
 end
 
 local function increment(s)
-  local p = procs
   if procs[s] then procs[s] = procs[s] + 1 else procs[s] = 1 end
 end
 
 local function seconds(t) 
   return string.format("%.1f", t)
-end
-
-local function hasAura(aura) 
-  -- for i=1,40 do
-  --   local n, ... = UnitAura("player",i)
-  --   if n == aura then
-  --    return true
-  --   end
-  -- end
-  return false
 end
 
 ------------------------------------------------------------------------------------------
@@ -70,14 +60,24 @@ function DOD.CombatProcessorInit()
     DOD.savedVars.combatProcs = { } 
   end
 
+  if DOD.savedVars.uptime == nil then
+    DOD.savedVars.uptime = { } 
+  end
+
   procs = DOD.savedVars.combatProcs
+  uptime = DOD.savedVars.uptime
 end
 
 function DOD.CombatProcessorGetProcsInfo()
   local str = "Time in combat: ".. string.format("%.1f", combatTime) .. "\n"
+  for k, v in pairs(uptime) do
+    local percent = string.format("%.1f", v/combatTime * 100)
+    str = str .. string.sub(k, 0, 30)  .. " - " ..  string.format("%.1f", v) .. " (" .. percent .."%)\n"
+  end
+
   for k, v in pairs(procs) do
     local ppm = getProcsPerMinute(k)
-    str = str .. string.sub(k, 0, 30)  .. " - " ..  v .. " (" .. seconds(ppm) .. "/min)" .. "\n"
+    str = str .. string.sub(k, 0, 30)  .. " - " ..  v .. " (" .. seconds(ppm) .. "/min)\n"
   end
   return str
 end
@@ -85,12 +85,24 @@ end
 function DOD.CombatProcessorClear()
   combatTime = 0
   procs = { }
+  uptime = { } 
 end
 
 function DOD.CombatProcessorUpdate(timeElapsed)
   local inCombat = UnitAffectingCombat("player")
   if inCombat then 
     combatTime = combatTime + timeElapsed
+
+    for k, v in pairs(DOD.trackedUptime) do
+      if (BuffPresent(v)) then
+        if (uptime[v])
+          then
+            uptime[v] = uptime[v] + timeElapsed
+          else
+            uptime[v] = timeElapsed
+          end
+      end
+    end
   end
 end
 
@@ -103,11 +115,20 @@ function DOD.OnCombatLogEvent(...)
   if not contains(eventsOfInterest, subevent) then return end
   local spellId, spellName = select(12, ...)
 
-  -- add tracker proc
-  if contains(DOD.spellsOfInterest, spellName) then increment(spellName) end
+  -- add tracked proc
+  if contains(DOD.trackedProcs, spellName) then increment(spellName) end
 
   --  if ends_with(subevent, "ENERGIZE") or ends_with(subevent, "AURA_APPLIED") then
   --    local amount, overEnergize = select(15, ...)
   --  end
   --  end
+end
+
+function BuffPresent(buffName)
+  local name = AuraUtil.FindAuraByName(buffName, 'player')
+  if(name) then
+    return true;
+  end
+
+  return false
 end
