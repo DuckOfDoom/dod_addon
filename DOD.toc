@@ -1,4 +1,5 @@
-## Interface: 90100
+## Interface: 110007
+
 ## Title: DOD
 ## Notes: Do some stuff
 ## SavedVariables: DOD_SETTINGS

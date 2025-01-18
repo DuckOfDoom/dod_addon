@@ -1,5 +1,5 @@
 --[[
-TODO: 
+TODO:
 - Make convenient anchoring
 - Research global cooldown tracking
 - SETTINGS
@@ -9,7 +9,7 @@ local eventFrame = CreateFrame("Frame")
 local GetCursorPosition = _G.GetCursorPosition
 local IsMouselooking = _G.IsMouselooking
 
-local movableFrame = nil; 
+local movableFrame = nil;
 local contentFrame = nil;
 local text, texture = nil, nil;
 
@@ -39,7 +39,7 @@ function DOD.CursorCooldownInit()
 
   movableFrame:SetSize(size, size);
 
-  -- TODO: Make another frame to anchor content 
+  -- TODO: Make another frame to anchor content
 
   contentFrame = CreateFrame(
   "Frame",
@@ -73,13 +73,13 @@ local failedSpellId = nil;
 local failedSpellIcon = nil;
 
 function DOD.ShowCursorCooldown(spellId)
-  local _, _, icon = GetSpellInfo(spellId);
+  local info = C_Spell.GetSpellInfo(spellId);
   failedSpellId = spellId;
-  failedSpellIcon = icon;
+  failedSpellIcon = info.iconID;
   activeUntil = GetTime() + 3;
 end
 
-function OnUpdate(self, elapsedSeconds) 
+function OnUpdate(self, elapsedSeconds)
   local scale = UIParent:GetEffectiveScale();
   local cursorX, cursorY = GetCursorPosition();
   cursorX = cursorX / scale;
@@ -90,8 +90,8 @@ function OnUpdate(self, elapsedSeconds)
   local time = GetTime();
 
   if (activeUntil > time) then
-    local start, duration, enable = GetSpellCooldown(failedSpellId);
-    local cooldownRemaining = duration - (time - start);
+    local cd = C_Spell.GetSpellCooldown(failedSpellId);
+    local cooldownRemaining = cd.duration - (time - cd.startTime);
 
     if (cooldownRemaining > 0) then
 

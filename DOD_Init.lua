@@ -1,8 +1,8 @@
 SLASH_DOD1 = "/dodshow"
 
 DOD = { }
-DOD.settings = { } 
-DOD.savedVars = { } 
+DOD.settings = { }
+DOD.savedVars = { }
 
 SlashCmdList["DOD"] = function(msg)
   DOD.ShowFrame()
@@ -20,7 +20,7 @@ function DOD.Init()
   initFrame:SetScript("OnUpdate", DOD.OnUpdate)
 end
 
-function DOD.OnUpdate(self, elapsedSeconds) 
+function DOD.OnUpdate(self, elapsedSeconds)
   DOD.CombatProcessorUpdate(elapsedSeconds)
 
   expInfo = DOD.GetExpPercentageInfo()
@@ -36,7 +36,7 @@ function DOD.ADDON_LOADED(addonName, ...)
     DOD_SETTINGS.position = {0, 0}
   end
 
-  if (DOD_SAVED_VARS == nil) then 
+  if (DOD_SAVED_VARS == nil) then
     DOD_SAVED_VARS = {}
     DOD_SAVED_VARS.combatProcs = {}
   end
